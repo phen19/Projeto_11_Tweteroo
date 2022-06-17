@@ -27,6 +27,13 @@ server.post("/sign-up", (req, res) =>{
   
   } )
 
+
+  server.get("/tweets/:username", (req, res) => {
+    const username = req.params.username
+    const tweets = tweet.filter(user => user.username ===username)
+    res.send(tweets)
+  })
+
   server.post("/tweets", (req, res) =>{
     let teste = req.body
     const user = users.find(u=>u.username === teste.username)
