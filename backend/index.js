@@ -26,8 +26,39 @@ server.post("/sign-up", (req, res) =>{
 
   server.get("/tweets", (req, res) =>{
     
-    
-    res.send(tweet.slice(Math.max(tweet.length - 10, 0)).reverse());
+    const page = req.query.page;
+
+    if (!page || page < 1) {
+      res.status(400).send("Informe uma página válida!");
+      return;
+    }
+  
+    const searchTweet = tweet.length - (page) * 10;
+    const firstTweet = (page - 1) * 10;
+  
+    let initialValue;
+    if (tweet.length <= 10) {
+      initialValue = 0;
+    } else {
+      if (searchTweet < 0) {
+        initialValue = 0;
+      } else {
+        initialValue = searchTweet;
+      }
+    }
+  
+    let finalValue;
+    if (firstTweet > tweet.length) {
+      finalValue = 0;
+    } else {
+      if (initialValue === 0) {
+        finalValue = tweet.length - firstTweet;
+      } else {
+        finalValue = initialValue + 10;
+      }
+    }
+
+    res.send(tweet.slice(initialValue, finalValue).reverse());
   
   } )
 
