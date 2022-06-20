@@ -6,15 +6,19 @@ const server = express();
 server.use(express.json())
 server.use(cors())
 
-const users = []
+const users = [{username:"bobesponja", avatar:"https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info"}]
 const tweet = []
 
 
 server.post("/sign-up", (req, res) =>{
     let user = req.body;
-    console.log(user)
+ 
+    if (user.username === null || user.username === "" || user.avatar === null || user.avatar === ""){
+      res.status(400).send("Todos os campos são obrigatórios");
+      return;
+    }
     users.push(user)
-    res.send("OK");
+    res.status(201).send("OK");
   
   } )
 
@@ -35,11 +39,17 @@ server.post("/sign-up", (req, res) =>{
   })
 
   server.post("/tweets", (req, res) =>{
-    let teste = req.body
-    const user = users.find(u=>u.username === teste.username)
-    teste.avatar = user.avatar
-    tweet.push(teste)
-    res.send("OK");
+    let message = req.body
+    const user = req.headers.user
+    const userA = users.find(u=>u.username === user)
+    message.username = user
+    message.avatar = userA.avatar
+    if (message.username === null || message.username === "" || message.avatar === null || message.avatar === "" || message.tweet === null || message.tweet === ""){
+      res.status(400).send("Todos os campos são obrigatórios");
+      return;
+    }
+    tweet.push(message)
+    res.status(201).send("OK");
   
   } )
 
